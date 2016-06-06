@@ -6,7 +6,7 @@
  * and map classes as well as the custom Production and Definition
  * classes provided with the assignment.
  */
- 
+
 #include <map>
 #include <fstream>
 #include "definition.h"
@@ -29,14 +29,14 @@ using namespace std;
 
 static void readGrammar(ifstream& infile, map<string, Definition>& grammar)
 {
-  while (true) {
-    string uselessText;
-    getline(infile, uselessText, '{');
-    if (infile.eof()) return;  // true? we encountered EOF before we saw a '{': no more productions!
-    infile.putback('{');
-    Definition def(infile);
-    grammar[def.getNonterminal()] = def;
-  }
+    while (true) {
+        string uselessText;
+        getline(infile, uselessText, '{');
+        if (infile.eof()) return;  // true? we encountered EOF before we saw a '{': no more productions!
+        infile.putback('{');
+        Definition def(infile);
+        grammar[def.getNonterminal()] = def;
+    }
 }
 
 /**
@@ -55,25 +55,49 @@ static void readGrammar(ifstream& infile, map<string, Definition>& grammar)
  *             token is represented as a '\0'-terminated C string.
  */
 
+void print_senstence(map<string, Definition> &grammar, const string &keyword)
+{
+    /* cout<<"find "<<keyword<<endl; */
+    auto myProduction = (grammar[keyword]).getRandomProduction();
+    /* for(auto my_itmyProduction.begin(); my_it!=myProduction.end(); ++my_it) { */
+    for(auto &my_it : myProduction) {
+        /* cout<<"inside and keyword is "<<*my_it<<endl; */
+        if((my_it)[0] == '<') {
+            print_senstence(grammar, my_it);
+        }else {
+            if(my_it != "." || my_it != ",")
+                cout<<my_it<<" ";
+            else
+                cout<<my_it;
+        }
+    }
+}
+
 int main(int argc, char *argv[])
 {
-  if (argc == 1) {
-    cerr << "You need to specify the name of a grammar file." << endl;
-    cerr << "Usage: rsg <path to grammar text file>" << endl;
-    return 1; // non-zero return value means something bad happened 
-  }
-  
-  ifstream grammarFile(argv[1]);
-  if (grammarFile.fail()) {
-    cerr << "Failed to open the file named \"" << argv[1] << "\".  Check to ensure the file exists. " << endl;
-    return 2; // each bad thing has its own bad return value
-  }
-  
-  // things are looking good...
-  map<string, Definition> grammar;
-  readGrammar(grammarFile, grammar);
-  cout << "The grammar file called \"" << argv[1] << "\" contains "
-       << grammar.size() << " definitions." << endl;
-  
-  return 0;
+    if (argc == 1) {
+        cerr << "You need to specify the name of a grammar file." << endl;
+        cerr << "Usage: rsg <path to grammar text file>" << endl;
+        return 1; // non-zero return value means something bad happened
+    }
+
+    ifstream grammarFile(argv[1]);
+    if (grammarFile.fail()) {
+        cerr << "Failed to open the file named \"" << argv[1] << "\".  Check to ensure the file exists. " << endl;
+        return 2; // each bad thing has its own bad return value
+    }
+
+    // things are looking good...
+    map<string, Definition> grammar;
+    readGrammar(grammarFile, grammar);
+    cout << "The grammar file called \"" << argv[1] << "\" contains "
+        << grammar.size() << " definitions." << endl;
+    for(auto &it : grammar) {
+        if(it.first == "<start>") {
+            print_senstence(grammar, "<start>");
+            break;
+        }
+    }
+
+    return 0;
 }

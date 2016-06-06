@@ -2,7 +2,7 @@
 ## Makefile for CS107 Assignment 1: Random Sentence Generator
 ##
 
-CPPFLAGS = -g -Wall
+CPPFLAGS = -std=c++11 -g -Wall
 
 CXX = g++
 LDFLAGS = 
