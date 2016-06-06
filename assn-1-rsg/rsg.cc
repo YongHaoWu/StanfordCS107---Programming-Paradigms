@@ -92,10 +92,13 @@ int main(int argc, char *argv[])
     readGrammar(grammarFile, grammar);
     cout << "The grammar file called \"" << argv[1] << "\" contains "
         << grammar.size() << " definitions." << endl;
-    for(auto &it : grammar) {
-        if(it.first == "<start>") {
-            print_senstence(grammar, "<start>");
-            break;
+    for(int i=0; i<3; ++i) {
+        cout<<endl<<endl<<"version # "<<i<<endl;
+        for(auto &it : grammar) {
+            if(it.first == "<start>") {
+                print_senstence(grammar, "<start>");
+                break;
+            }
         }
     }
 
